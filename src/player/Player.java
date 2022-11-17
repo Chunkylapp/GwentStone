@@ -34,6 +34,9 @@ public class Player {
         }
         // shuffle the deck
         Collections.shuffle(deck, new Random(seed));
+        // draw one card
+        hand.add(deck.get(0));
+        deck.remove(0);
     }
 
     public int getPlayerNo() {
@@ -83,6 +86,11 @@ public class Player {
         return null;
     }
 
+    public void drawCard(){
+        hand.add(deck.get(0));
+        deck.remove(0);
+    }
+
     /* might be useful later thanks github copilot :)
     public void drawCard() {
         if (deck.size() > 0) {
@@ -112,6 +120,15 @@ public class Player {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode json = objectMapper.createArrayNode();
         for (CardInterface card : deck) {
+            json.add(card.getJson());
+        }
+        return json;
+    }
+
+    public ArrayNode getJsonHand(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayNode json = objectMapper.createArrayNode();
+        for (CardInterface card : hand) {
             json.add(card.getJson());
         }
         return json;

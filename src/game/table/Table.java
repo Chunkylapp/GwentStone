@@ -71,4 +71,7 @@ public class Table {
         table.get(row).clear();
     }
 
+    public void placeCard(CardInterface card, int row, int column) {
+        table.get(row).add(column, card);
+    }
 }
