@@ -1,5 +1,8 @@
 package card.minions;
 import card.CardInterface;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 
@@ -114,4 +117,22 @@ public class NormalMinion implements CardInterface {
     public boolean isFrozen() {
         return isFrozen == 1;
     }
+
+    public ObjectNode getJson() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode json = objectMapper.createObjectNode();
+        json.put("mana", mana);
+        json.put("attackDamage", attackDamage);
+        json.put("health", health);
+        json.put("description", description);
+        // for string array
+        ArrayNode strings = objectMapper.createArrayNode();
+        for (String color : colors) {
+            strings.add(color);
+        }
+        json.put("colors", strings);
+        json.put("name", name);
+        return json;
+    }
+
 }

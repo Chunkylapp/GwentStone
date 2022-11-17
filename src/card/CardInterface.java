@@ -1,5 +1,7 @@
 package card;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.util.ArrayList;
 
 public interface CardInterface {
@@ -19,4 +21,5 @@ public interface CardInterface {
     public void freeze();
     public void unFreeze();
     public boolean isFrozen();
+    public ObjectNode getJson();
 }

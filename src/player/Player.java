@@ -1,10 +1,16 @@
 package player;
+import card.CardFactory;
 import card.CardInterface;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.CardInput;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
-public class player {
+public class Player {
 
     private int playerNo;
     private int mana;
@@ -12,18 +18,22 @@ public class player {
     private ArrayList<CardInterface> hand;
     private ArrayList<CardInterface> deck;
 
-    public player() {
+    public Player() {
     }
 
-    public player(int playerNo, int mana, CardInterface hero,ArrayList<CardInput> rawDeck) {
+    public Player(int playerNo, int mana, CardInterface hero, ArrayList<CardInput> rawDeck, long seed) {
+        CardFactory factory = new CardFactory();
         this.playerNo = playerNo;
         this.mana = mana;
         this.hero = hero;
         this.hand = new ArrayList<CardInterface>();
         // build the deck from CardInput to CardInterface
+        this.deck = new ArrayList<CardInterface>();
         for(CardInput rawCard : rawDeck) {
-
+            deck.add(deck.size(), factory.getCard(rawCard));
         }
+        // shuffle the deck
+        Collections.shuffle(deck, new Random(seed));
     }
 
     public int getPlayerNo() {
@@ -97,5 +107,14 @@ public class player {
     public void startTurn() {
         drawCard();
     }*/
+
+    public ArrayNode getJsonDeck(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayNode json = objectMapper.createArrayNode();
+        for (CardInterface card : deck) {
+            json.add(card.getJson());
+        }
+        return json;
+    }
 
 }

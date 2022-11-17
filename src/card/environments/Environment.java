@@ -1,4 +1,5 @@
-package card.minions;
+package card.environments;
+
 import card.CardInterface;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -6,26 +7,20 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 
-public class SpecialMinion implements CardInterface {
+public class Environment implements CardInterface {
     private int mana;
-    private int attackDamage;
-    private int health;
     private String description;
     private ArrayList<String> colors;
     private String name;
-    private short isFrozen;
 
-    public SpecialMinion() {
+    public Environment() {
     }
 
-    public SpecialMinion(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
+    public Environment(int mana, String description, ArrayList<String> colors, String name) {
         this.mana = mana;
-        this.attackDamage = attackDamage;
-        this.health = health;
         this.description = description;
-        this.colors = colors;
+        this.colors = new ArrayList<String>(colors);
         this.name = name;
-        isFrozen = 0;
     }
 
     public int getMana() {
@@ -38,21 +33,19 @@ public class SpecialMinion implements CardInterface {
     }
 
     public int getAttackDamage() {
-        return attackDamage;
+        return 0;
     }
 
     public int setAttackDamage(int attackDamage) {
-        this.attackDamage = attackDamage;
-        return attackDamage;
+        return 0;
     }
 
     public int getHealth() {
-        return health;
+        return 0;
     }
 
     public int setHealth(int health) {
-        this.health = health;
-        return health;
+        return 0;
     }
 
     public String getDescription() {
@@ -69,7 +62,7 @@ public class SpecialMinion implements CardInterface {
     }
 
     public ArrayList<String> setColors(ArrayList<String> colors) {
-        this.colors = colors;
+        this.colors = new ArrayList<String>(colors);
         return colors;
     }
 
@@ -83,47 +76,27 @@ public class SpecialMinion implements CardInterface {
     }
 
     public void attack(CardInterface attackedCard) {
-        // to implement for each special minion
     }
 
     public void freeze() {
-        isFrozen = 1;
     }
 
     public void unFreeze() {
-        isFrozen = 0;
     }
 
     public boolean isFrozen() {
-        return isFrozen == 1;
+        return false;
     }
 
-    public String toString() {
-        return "specialMinion{"
-                + "mana="
-                + mana
-                + ", attackDamage="
-                + attackDamage
-                + ", health="
-                + health
-                + ", description='"
-                + description
-                + '\''
-                + ", colors='"
-                + colors
-                + '\''
-                + ", name='"
-                + name
-                + '\''
-                + '}';
+    public void spell(ArrayList<CardInterface> row) {
+        // affects all the cards in the row
     }
 
+    @Override
     public ObjectNode getJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode json = objectMapper.createObjectNode();
         json.put("mana", mana);
-        json.put("attackDamage", attackDamage);
-        json.put("health", health);
         json.put("description", description);
         ArrayNode strings = objectMapper.createArrayNode();
         for (String color : colors) {
