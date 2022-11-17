@@ -1,16 +1,28 @@
 package card.minions;
-
 import card.cardInterface;
+
+import java.util.ArrayList;
 
 public class specialMinion implements cardInterface {
     private int mana;
     private int attackDamage;
     private int health;
     private String description;
-    private String colors;
+    private ArrayList<String> colors;
     private String name;
+    private short isFrozen;
 
     public specialMinion() {
+    }
+
+    public specialMinion(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
+        this.mana = mana;
+        this.attackDamage = attackDamage;
+        this.health = health;
+        this.description = description;
+        this.colors = colors;
+        this.name = name;
+        isFrozen = 0;
     }
 
     public int getMana() {
@@ -49,11 +61,11 @@ public class specialMinion implements cardInterface {
         return description;
     }
 
-    public String getColors() {
+    public ArrayList<String> getColors() {
         return colors;
     }
 
-    public String setColors(String colors) {
+    public ArrayList<String> setColors(ArrayList<String> colors) {
         this.colors = colors;
         return colors;
     }
@@ -65,5 +77,21 @@ public class specialMinion implements cardInterface {
     public String setName(String name) {
         this.name = name;
         return name;
+    }
+
+    public void attack(cardInterface attackedCard) {
+        // to implement for each special minion
+    }
+
+    public void freeze() {
+        isFrozen = 1;
+    }
+
+    public void unFreeze() {
+        isFrozen = 0;
+    }
+
+    public boolean isFrozen() {
+        return isFrozen == 1;
     }
 }
