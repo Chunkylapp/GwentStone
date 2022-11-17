@@ -1,9 +1,9 @@
 package card.minions;
-import card.cardInterface;
+import card.CardInterface;
 
 import java.util.ArrayList;
 
-public class specialMinion implements cardInterface {
+public class SpecialMinion implements CardInterface {
     private int mana;
     private int attackDamage;
     private int health;
@@ -12,10 +12,10 @@ public class specialMinion implements cardInterface {
     private String name;
     private short isFrozen;
 
-    public specialMinion() {
+    public SpecialMinion() {
     }
 
-    public specialMinion(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
+    public SpecialMinion(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
         this.mana = mana;
         this.attackDamage = attackDamage;
         this.health = health;
@@ -79,7 +79,7 @@ public class specialMinion implements cardInterface {
         return name;
     }
 
-    public void attack(cardInterface attackedCard) {
+    public void attack(CardInterface attackedCard) {
         // to implement for each special minion
     }
 

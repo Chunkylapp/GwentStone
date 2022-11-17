@@ -2,7 +2,7 @@ package card;
 
 import java.util.ArrayList;
 
-public interface cardInterface {
+public interface CardInterface {
     public int getMana();
     public int setMana(int mana);
     public int getAttackDamage();
@@ -15,7 +15,7 @@ public interface cardInterface {
     public ArrayList<String> setColors(ArrayList<String> colors);
     public String getName();
     public String setName(String name);
-    public void attack(cardInterface attackedCard);
+    public void attack(CardInterface attackedCard);
     public void freeze();
     public void unFreeze();
     public boolean isFrozen();

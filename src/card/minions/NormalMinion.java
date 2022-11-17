@@ -1,28 +1,25 @@
-package card.heros;
-
-import card.cardInterface;
+package card.minions;
+import card.CardInterface;
 
 import java.util.ArrayList;
 
-public class hero implements cardInterface {
+public class NormalMinion implements CardInterface {
     private int mana;
     private int attackDamage;
     private int health;
     private String description;
     private ArrayList<String> colors;
     private String name;
-
     private short isFrozen;
-
-    public hero() {
+    public NormalMinion() {
     }
 
-    public hero(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
+    public NormalMinion(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
         this.mana = mana;
         this.attackDamage = attackDamage;
         this.health = health;
         this.description = description;
-        this.colors = new ArrayList<String>(colors);
+        this.colors = colors;
         this.name = name;
         isFrozen = 0;
     }
@@ -81,7 +78,29 @@ public class hero implements cardInterface {
         return name;
     }
 
-    public void attack(cardInterface attackedCard) {
+    @Override
+    public String toString() {
+        return "normalMinion{"
+                + "mana="
+                + mana
+                + ", attackDamage="
+                + attackDamage
+                + ", health="
+                + health
+                + ", description='"
+                + description
+                + '\''
+                + ", colors='"
+                + colors
+                + '\''
+                + ", name='"
+                + name
+                + '\''
+                + '}';
+    }
+
+    public void attack(CardInterface attackedCard) {
+        attackedCard.setHealth(attackedCard.getHealth() - this.attackDamage);
     }
 
     public void freeze() {

@@ -1,5 +1,6 @@
 package player;
-import card.cardInterface;
+import card.CardInterface;
+import fileio.CardInput;
 
 import java.util.ArrayList;
 
@@ -7,19 +8,22 @@ public class player {
 
     private int playerNo;
     private int mana;
-    private cardInterface hero;
-    private ArrayList<cardInterface> hand;
-    private ArrayList<cardInterface> deck;
+    private CardInterface hero;
+    private ArrayList<CardInterface> hand;
+    private ArrayList<CardInterface> deck;
 
     public player() {
     }
 
-    public player(int playerNo, int mana, cardInterface hero, ArrayList<cardInterface> hand, ArrayList<cardInterface> deck) {
+    public player(int playerNo, int mana, CardInterface hero,ArrayList<CardInput> rawDeck) {
         this.playerNo = playerNo;
         this.mana = mana;
         this.hero = hero;
-        this.hand = new ArrayList<cardInterface>();
-        this.deck = new ArrayList<cardInterface>(deck);
+        this.hand = new ArrayList<CardInterface>();
+        // build the deck from CardInput to CardInterface
+        for(CardInput rawCard : rawDeck) {
+
+        }
     }
 
     public int getPlayerNo() {
@@ -40,33 +44,33 @@ public class player {
         return mana;
     }
 
-    public cardInterface getHero() {
+    public CardInterface getHero() {
         return hero;
     }
 
-    public cardInterface setHero(cardInterface hero) {
+    public CardInterface setHero(CardInterface hero) {
         this.hero = hero;
         return hero;
     }
 
-    public ArrayList<cardInterface> getHand() {
+    public ArrayList<CardInterface> getHand() {
         return hand;
     }
 
-    public ArrayList<cardInterface> setHand(ArrayList<cardInterface> hand) {
+    public ArrayList<CardInterface> setHand(ArrayList<CardInterface> hand) {
         //this.hand = hand;
         //return hand;
-        return void;
+        return null;
     }
 
-    public ArrayList<cardInterface> getDeck() {
+    public ArrayList<CardInterface> getDeck() {
         return deck;
     }
 
-    public ArrayList<cardInterface> setDeck(ArrayList<cardInterface> deck) {
+    public ArrayList<CardInterface> setDeck(ArrayList<CardInterface> deck) {
         //this.deck = deck;
         //return deck;
-        return void;
+        return null;
     }
 
     /* might be useful later thanks github copilot :)
