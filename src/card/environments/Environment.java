@@ -88,6 +88,14 @@ public class Environment implements CardInterface {
         return false;
     }
 
+    public boolean UsedAttack() {
+        return false;
+    }
+
+    public boolean isTank(){
+        return false;
+    }
+
     public void spell(ArrayList<CardInterface> row) {
         // affects all the cards in the row
     }

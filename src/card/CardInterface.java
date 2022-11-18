@@ -21,7 +21,8 @@ public interface CardInterface {
     public void freeze();
     public void unFreeze();
     public boolean isFrozen();
-
+    public boolean UsedAttack();
     public boolean isEnvironment();
+    public boolean isTank();
     public ObjectNode getJson();
 }

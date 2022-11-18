@@ -134,6 +134,17 @@ public class NormalMinion implements CardInterface {
         return isFrozen == 1;
     }
 
+    public boolean UsedAttack() {
+        return usedAttack == 1;
+    }
+
+    public boolean isTank() {
+        return switch (name) {
+            case "Goliath", "Warden" -> true;
+            default -> false;
+        };
+    }
+
     public ObjectNode getJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode json = objectMapper.createObjectNode();

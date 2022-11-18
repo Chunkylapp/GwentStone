@@ -85,13 +85,13 @@ public class Game {
                             playerOne.setMana(playerOne.getMana() + rounds);
                         if (playerTwo.getMana() < 10)
                             playerTwo.setMana(playerTwo.getMana() + rounds);
+                        playerTwo.drawCard();
+                        playerOne.drawCard();
                     }
                     if (currentPlayer == 1) {
                         currentPlayer = 2;
-                        playerOne.drawCard();
                     } else {
                         currentPlayer = 1;
-                        playerTwo.drawCard();
                     }
                     break;
                 case "getCardsInHand":
@@ -154,6 +154,91 @@ public class Game {
                     getPlayerMana.put("output", getPlayer(command.getPlayerIdx()).getMana());
                     output.add(getPlayerMana);
                     break;
+
+                case "cardUsesAttack":
+                    // check if card is on table
+                    // attack firstly the tanks but only if they want to attack the front row
+                    // the hero can be attacked only if tanks are dead
+                    // must check if the current card is frozen or not
+                    CardInterface cardAttacker = table.getCard(command.getCardAttacker().getX(), command.getCardAttacker().getY());
+                    if(cardAttacker != null){
+                        CardInterface cardToAttack = table.getCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+                        // check if the card to attack is on the 1st row
+                        if(cardToAttack != null) {
+                            if (currentPlayer == 1) {
+                                if (command.getCardAttacked().getX() == 1) {
+                                    // check if the card to attack is a tank
+                                    if (cardToAttack.isTank()) {
+                                        cardAttacker.attack(cardToAttack);
+                                        if (cardToAttack.getHealth() <= 0)
+                                            table.removeCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+                                    }
+                                    else{
+                                        // lets try to find a tank
+                                        CardInterface tank = null;
+                                        for(int i = 0; i < 3; i++){
+                                            tank = table.getCard(1, i);
+                                            if(tank != null){
+                                                if(tank.isTank()){
+                                                    cardAttacker.attack(tank);
+                                                    if (tank.getHealth() <= 0)
+                                                        table.removeCard(1, i);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if(tank == null){
+                                            // we can attack the desired card
+                                            cardAttacker.attack(cardToAttack);
+                                            if (cardToAttack.getHealth() <= 0)
+                                                table.removeCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+                                        }
+                                    }
+                                }
+                                else{
+                                    cardAttacker.attack(cardToAttack);
+                                    if (cardToAttack.getHealth() <= 0)
+                                        table.removeCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+                                }
+                            }
+                            else{
+                                if (command.getCardAttacked().getX() == 2) {
+                                    // check if the card to attack is a tank
+                                    if (cardToAttack.isTank()) {
+                                        cardAttacker.attack(cardToAttack);
+                                        if (cardToAttack.getHealth() <= 0)
+                                            table.removeCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+                                    }
+                                    else{
+                                        // lets try to find a tank
+                                        CardInterface tank = null;
+                                        for(int i = 0; i < 3; i++){
+                                            tank = table.getCard(2, i);
+                                            if(tank != null){
+                                                if(tank.isTank()){
+                                                    cardAttacker.attack(tank);
+                                                    if (tank.getHealth() <= 0)
+                                                        table.removeCard(2, i);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if(tank == null){
+                                            // we can attack the desired card
+                                            cardAttacker.attack(cardToAttack);
+                                            if (cardToAttack.getHealth() <= 0)
+                                                table.removeCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+                                        }
+                                    }
+                                }
+                                else{
+                                    cardAttacker.attack(cardToAttack);
+                                    if (cardToAttack.getHealth() <= 0)
+                                        table.removeCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+                                }
+                            }
+                        }
+                    }
 
 
                 default:

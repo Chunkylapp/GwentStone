@@ -15,6 +15,8 @@ public class SpecialMinion implements CardInterface {
     private String name;
     private short isFrozen;
 
+    private short usedAttack;
+
     public SpecialMinion() {
     }
 
@@ -96,6 +98,14 @@ public class SpecialMinion implements CardInterface {
 
     public boolean isFrozen() {
         return isFrozen == 1;
+    }
+
+    public boolean UsedAttack() {
+        return usedAttack == 1;
+    }
+
+    public boolean isTank(){
+        return false;
     }
 
     public boolean isEnvironment() {
