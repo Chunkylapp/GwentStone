@@ -21,6 +21,8 @@ public class Game {
     private card.heros.Hero playerOneHero;
     private card.heros.Hero playerTwoHero;
     private int currentPlayer;
+    private int eOfRoundPlayer;
+    private int rounds;
     private Player playerOne;
     private Player playerTwo;
 
@@ -31,7 +33,12 @@ public class Game {
         this.playerOneHero = (Hero) factory.getCard(inputData.getGames().get(0).getStartGame().getPlayerOneHero());
         this.playerTwoHero = (Hero) factory.getCard(inputData.getGames().get(0).getStartGame().getPlayerTwoHero());
         currentPlayer = inputData.getGames().get(0).getStartGame().getStartingPlayer();
-
+        if(currentPlayer == 1) {
+            eOfRoundPlayer = 2;
+        } else {
+            eOfRoundPlayer = 1;
+        }
+        rounds = 1;
         playerOne = new Player(1, 1, playerOneHero, inputData.getPlayerOneDecks().getDecks().get(inputData.getGames().get(0).getStartGame().getPlayerOneDeckIdx()), inputData.getGames().get(0).getStartGame().getShuffleSeed());
         playerTwo = new Player(2, 1, playerTwoHero, inputData.getPlayerTwoDecks().getDecks().get(inputData.getGames().get(0).getStartGame().getPlayerTwoDeckIdx()), inputData.getGames().get(0).getStartGame().getShuffleSeed());
     }
@@ -72,11 +79,17 @@ public class Game {
                     output.add(getPlayerTurn);
                     break;
                 case "endPlayerTurn":
+                    if(eOfRoundPlayer == currentPlayer) {
+                        rounds++;
+                        if(playerOne.getMana() < 10)
+                            playerOne.setMana(playerOne.getMana() + rounds);
+                        if(playerTwo.getMana() < 10)
+                            playerTwo.setMana(playerTwo.getMana() + rounds);
+                    }
                     if (currentPlayer == 1) {
                         currentPlayer = 2;
                         playerOne.drawCard();
-                    }
-                    else {
+                    } else {
                         currentPlayer = 1;
                         playerTwo.drawCard();
                     }
@@ -89,23 +102,37 @@ public class Game {
                     output.add(getCardsInHand);
                     break;
                 case "placeCard":
-                    table.placeCard(getPlayer(command.getPlayerIdx()).getHand().get(command.getHandIdx()), command.getX(), command.getY());
-                    break;
-                case "getCardsOnTable":
-                    break;
-                case "getPlayerMana":
-                    ObjectNode getPlayerMana = objectMapper.createObjectNode();
-                    getPlayerMana.put("command", command.getCommand());
-                    getPlayerMana.put("playerIdx", command.getPlayerIdx());
-                    getPlayerMana.put("output", getPlayer(command.getPlayerIdx()).getMana());
-                    output.add(getPlayerMana);
-                    break;
+                    CardInterface card = getPlayer(currentPlayer).getHand().remove(command.getHandIdx());
+                    if (card != null) {
+                        if ((card.getMana() <= getPlayer(currentPlayer).getMana()) && !card.isEnvironment()) {
+                            getPlayer(currentPlayer).setMana(getPlayer(currentPlayer).getMana() - card.getMana());
+                            table.placeCard(card, command.getX(), command.getY());
+                            //getPlayer(command.getPlayerIdx()).getHand().remove(command.getHandIdx());
+                        }
+                    } else {
+                        System.out.println("Card is null");
+                    }
+            break;
+            case "getCardsOnTable":
+                ObjectNode getCardsOnTable = objectMapper.createObjectNode();
+                getCardsOnTable.put("command", command.getCommand());
+                ObjectNode tableJson = table.getJson();
+                getCardsOnTable.putObject("output").setAll(tableJson);
+                output.add(getCardsOnTable);
+                break;
+            case "getPlayerMana":
+                ObjectNode getPlayerMana = objectMapper.createObjectNode();
+                getPlayerMana.put("command", command.getCommand());
+                getPlayerMana.put("playerIdx", command.getPlayerIdx());
+                getPlayerMana.put("output", getPlayer(command.getPlayerIdx()).getMana());
+                output.add(getPlayerMana);
+                break;
 
 
-                default:
-                    break;
-            }
+            default:
+                break;
         }
     }
+}
 
 }

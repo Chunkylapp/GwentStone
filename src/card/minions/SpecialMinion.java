@@ -98,6 +98,9 @@ public class SpecialMinion implements CardInterface {
         return isFrozen == 1;
     }
 
+    public boolean isEnvironment() {
+        return false;
+    }
     public String toString() {
         return "specialMinion{"
                 + "mana="

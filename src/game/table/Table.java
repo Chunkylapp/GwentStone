@@ -1,6 +1,9 @@
 package game.table;
 
 import card.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 
@@ -72,6 +75,23 @@ public class Table {
     }
 
     public void placeCard(CardInterface card, int row, int column) {
+        // check if there are no more than 5 cards in the row
         table.get(row).add(column, card);
     }
+
+    public ObjectNode getJson(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode tableNode = objectMapper.createObjectNode();
+        ArrayNode rows = objectMapper.createArrayNode();
+        for(int i = 0; i < table.size(); i++){
+            ArrayNode col = objectMapper.createArrayNode();
+            for(int j = 0; j < table.get(i).size(); j++){
+                col.add(table.get(i).get(j).getJson());
+            }
+            rows.add(col);
+        }
+        tableNode.set("table", rows);
+        return tableNode;
+    }
+
 }

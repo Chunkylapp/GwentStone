@@ -73,7 +73,6 @@ public final class Main {
 
         //TODO add here the entry point to your implementation
         if(filePath1.equals("test02_place_card.json")) {
-            System.out.println("test");
             Game game = new Game(inputData);
             game.play(output);
         }

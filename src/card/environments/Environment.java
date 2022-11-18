@@ -92,6 +92,10 @@ public class Environment implements CardInterface {
         // affects all the cards in the row
     }
 
+    public boolean isEnvironment() {
+        return true;
+    }
+
     @Override
     public ObjectNode getJson() {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -99,6 +99,10 @@ public class Hero implements CardInterface {
         return isFrozen == 1;
     }
 
+    public boolean isEnvironment() {
+        return false;
+    }
+
     public ObjectNode getJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode json = objectMapper.createObjectNode();

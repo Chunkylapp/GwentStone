@@ -81,6 +81,18 @@ public class NormalMinion implements CardInterface {
         return name;
     }
 
+    public short getIsFrozen() {
+        return isFrozen;
+    }
+
+    public short setIsFrozen(short isFrozen) {
+        this.isFrozen = isFrozen;
+        return isFrozen;
+    }
+
+    public boolean isEnvironment() {
+        return false;
+    }
     @Override
     public String toString() {
         return "normalMinion{"
