@@ -13,35 +13,23 @@ public class CardFactory {
     }
 
     public CardInterface getCard(CardInput rawCard) {
-        switch(rawCard.getName()) {
-            case "Sentinel":
-            case "Warden":
-            case "Goliath":
-            case "Berserker":
-                return new NormalMinion(rawCard.getMana(), rawCard.getAttackDamage(),
-                        rawCard.getHealth(), rawCard.getDescription(),
-                        rawCard.getColors(), rawCard.getName());
-            case "The Ripper":
-            case "Miraj":
-            case "The Cursed One":
-            case "Disciple":
-                return new SpecialMinion(rawCard.getMana(), rawCard.getAttackDamage(),
-                        rawCard.getHealth(), rawCard.getDescription(),
-                        rawCard.getColors(), rawCard.getName());
-            case "Lord Royce":
-            case "Empress Thorina":
-            case "King Mudface":
-            case "General Kocioraw":
-                return new Hero(rawCard.getMana(), rawCard.getAttackDamage(),
-                        rawCard.getDescription(),
-                        rawCard.getColors(), rawCard.getName());
-            case "Firestorm":
-            case "Winterfell":
-            case "Heart Hound":
-                return new Environment(rawCard.getMana(), rawCard.getDescription(),
-                        new ArrayList<String>(rawCard.getColors()), rawCard.getName());
-            default:
-                return null;
-        }
+        return switch (rawCard.getName()) {
+            case "Sentinel", "Warden", "Goliath", "Berserker" ->
+                    new NormalMinion(rawCard.getMana(), rawCard.getAttackDamage(),
+                            rawCard.getHealth(), rawCard.getDescription(),
+                            rawCard.getColors(), rawCard.getName());
+            case "The Ripper", "Miraj", "The Cursed One", "Disciple" ->
+                    new SpecialMinion(rawCard.getMana(), rawCard.getAttackDamage(),
+                            rawCard.getHealth(), rawCard.getDescription(),
+                            rawCard.getColors(), rawCard.getName());
+            case "Lord Royce", "Empress Thorina", "King Mudface", "General Kocioraw" ->
+                    new Hero(rawCard.getMana(), rawCard.getAttackDamage(),
+                            rawCard.getDescription(),
+                            rawCard.getColors(), rawCard.getName());
+            case "Firestorm", "Winterfell", "Heart Hound" ->
+                    new Environment(rawCard.getMana(), rawCard.getDescription(),
+                            new ArrayList<String>(rawCard.getColors()), rawCard.getName());
+            default -> null;
+        };
     }
 }

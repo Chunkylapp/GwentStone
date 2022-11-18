@@ -74,23 +74,51 @@ public class Table {
         table.get(row).clear();
     }
 
-    public void placeCard(CardInterface card, int row, int column) {
-        // check if there are no more than 5 cards in the row
-        table.get(row).add(column, card);
+    public boolean placeCard(CardInterface card, int playerNo) {
+        int row = -1;
+        switch (card.getName()) {
+            case "The Ripper":
+            case "Miraj":
+            case "Goliath":
+            case "Warden":
+                if (playerNo == 1)
+                    row = 2;
+                else
+                    row = 1;
+                break;
+            case "Sentinel":
+            case "Berserker":
+            case "The Cursed One":
+            case "Disciple":
+                if (playerNo == 1)
+                    row = 3;
+                else
+                    row = 0;
+                break;
+            default:
+                break;
+        }
+        if (row != -1)
+            if (table.get(row).size() < 5) {
+                table.get(row).add(card);
+                return true;
+            } else {
+                return false;
+            }
+        else
+            return false;
     }
 
-    public ObjectNode getJson(){
+    public ArrayNode getJson() {
         ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode tableNode = objectMapper.createObjectNode();
-        ArrayNode rows = objectMapper.createArrayNode();
-        for(int i = 0; i < table.size(); i++){
+        ArrayNode tableNode = objectMapper.createArrayNode();
+        for (int i = 0; i < table.size(); i++) {
             ArrayNode col = objectMapper.createArrayNode();
-            for(int j = 0; j < table.get(i).size(); j++){
+            for (int j = 0; j < table.get(i).size(); j++) {
                 col.add(table.get(i).get(j).getJson());
             }
-            rows.add(col);
+            tableNode.add(col);
         }
-        tableNode.set("table", rows);
         return tableNode;
     }
 

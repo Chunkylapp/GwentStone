@@ -72,7 +72,7 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
 
         //TODO add here the entry point to your implementation
-        if(filePath1.equals("test02_place_card.json")) {
+        if(filePath1.equals("test02_place_card.json") || filePath1.equals("test01_game_start.json") || filePath1.equals("test03_place_card_invalid.json")) {
             Game game = new Game(inputData);
             game.play(output);
         }

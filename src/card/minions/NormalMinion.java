@@ -14,6 +14,8 @@ public class NormalMinion implements CardInterface {
     private ArrayList<String> colors;
     private String name;
     private short isFrozen;
+
+    private short usedAttack;
     public NormalMinion() {
     }
 
@@ -25,6 +27,7 @@ public class NormalMinion implements CardInterface {
         this.colors = colors;
         this.name = name;
         isFrozen = 0;
+        usedAttack = 0;
     }
 
     public int getMana() {
@@ -115,7 +118,8 @@ public class NormalMinion implements CardInterface {
     }
 
     public void attack(CardInterface attackedCard) {
-        attackedCard.setHealth(attackedCard.getHealth() - this.attackDamage);
+        attackedCard.setHealth(attackedCard.getHealth() - attackDamage);
+        usedAttack = 1;
     }
 
     public void freeze() {

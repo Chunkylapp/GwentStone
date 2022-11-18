@@ -33,7 +33,7 @@ public class Game {
         this.playerOneHero = (Hero) factory.getCard(inputData.getGames().get(0).getStartGame().getPlayerOneHero());
         this.playerTwoHero = (Hero) factory.getCard(inputData.getGames().get(0).getStartGame().getPlayerTwoHero());
         currentPlayer = inputData.getGames().get(0).getStartGame().getStartingPlayer();
-        if(currentPlayer == 1) {
+        if (currentPlayer == 1) {
             eOfRoundPlayer = 2;
         } else {
             eOfRoundPlayer = 1;
@@ -79,11 +79,11 @@ public class Game {
                     output.add(getPlayerTurn);
                     break;
                 case "endPlayerTurn":
-                    if(eOfRoundPlayer == currentPlayer) {
+                    if (eOfRoundPlayer == currentPlayer) {
                         rounds++;
-                        if(playerOne.getMana() < 10)
+                        if (playerOne.getMana() < 10)
                             playerOne.setMana(playerOne.getMana() + rounds);
-                        if(playerTwo.getMana() < 10)
+                        if (playerTwo.getMana() < 10)
                             playerTwo.setMana(playerTwo.getMana() + rounds);
                     }
                     if (currentPlayer == 1) {
@@ -102,37 +102,64 @@ public class Game {
                     output.add(getCardsInHand);
                     break;
                 case "placeCard":
-                    CardInterface card = getPlayer(currentPlayer).getHand().remove(command.getHandIdx());
+                    CardInterface card = getPlayer(currentPlayer).getHand().get(command.getHandIdx());
                     if (card != null) {
-                        if ((card.getMana() <= getPlayer(currentPlayer).getMana()) && !card.isEnvironment()) {
-                            getPlayer(currentPlayer).setMana(getPlayer(currentPlayer).getMana() - card.getMana());
-                            table.placeCard(card, command.getX(), command.getY());
-                            //getPlayer(command.getPlayerIdx()).getHand().remove(command.getHandIdx());
+                        // output diferit pentru fiecare eroare ffs
+                        // de bagat absolut toate comenzile intr-un command handler cu metode diferite
+                        if (!card.isEnvironment()) {
+                            if ((card.getMana() <= getPlayer(currentPlayer).getMana())) {
+                                if (table.placeCard(card, currentPlayer)) {
+                                    getPlayer(currentPlayer).setMana(getPlayer(currentPlayer).getMana() - card.getMana());
+                                    getPlayer(currentPlayer).getHand().remove(command.getHandIdx());
+                                } else {
+                                    ObjectNode placeCard = objectMapper.createObjectNode();
+                                    placeCard.put("command", command.getCommand());
+                                    placeCard.put("handIdx", command.getHandIdx());
+                                    placeCard.put("error", "Cannot place card on table since row is full.");
+                                    output.add(placeCard);
+                                    break;
+                                }
+                                //getPlayer(command.getPlayerIdx()).getHand().remove(command.getHandIdx());
+                            } else {
+                                ObjectNode placeCard = objectMapper.createObjectNode();
+                                placeCard.put("command", command.getCommand());
+                                placeCard.put("handIdx", command.getHandIdx());
+                                placeCard.put("error", "Not enough mana to place card on table.");
+                                output.add(placeCard);
+                                break;
+                            }
+                        } else {
+                            ObjectNode placeCard = objectMapper.createObjectNode();
+                            placeCard.put("command", command.getCommand());
+                            placeCard.put("handIdx", command.getHandIdx());
+                            placeCard.put("error", "Cannot place environment card on table.");
+                            output.add(placeCard);
+                            break;
                         }
                     } else {
                         System.out.println("Card is null");
                     }
-            break;
-            case "getCardsOnTable":
-                ObjectNode getCardsOnTable = objectMapper.createObjectNode();
-                getCardsOnTable.put("command", command.getCommand());
-                ObjectNode tableJson = table.getJson();
-                getCardsOnTable.putObject("output").setAll(tableJson);
-                output.add(getCardsOnTable);
-                break;
-            case "getPlayerMana":
-                ObjectNode getPlayerMana = objectMapper.createObjectNode();
-                getPlayerMana.put("command", command.getCommand());
-                getPlayerMana.put("playerIdx", command.getPlayerIdx());
-                getPlayerMana.put("output", getPlayer(command.getPlayerIdx()).getMana());
-                output.add(getPlayerMana);
-                break;
+                    break;
+                case "getCardsOnTable":
+                    ObjectNode getCardsOnTable = objectMapper.createObjectNode();
+                    getCardsOnTable.put("command", command.getCommand());
+                    // put json array of cards on table
+                    getCardsOnTable.put("output", table.getJson());
+                    output.add(getCardsOnTable);
+                    break;
+                case "getPlayerMana":
+                    ObjectNode getPlayerMana = objectMapper.createObjectNode();
+                    getPlayerMana.put("command", command.getCommand());
+                    getPlayerMana.put("playerIdx", command.getPlayerIdx());
+                    getPlayerMana.put("output", getPlayer(command.getPlayerIdx()).getMana());
+                    output.add(getPlayerMana);
+                    break;
 
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
     }
-}
 
 }
