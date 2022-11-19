@@ -27,6 +27,14 @@ public class Table {
     }
 
     public CardInterface getCard(int row, int column) {
+        // check if row and column are valid
+        if (row < 0 || row > 3 || column < 0 || (table.get(row).size() - 1) < column) {
+            return null;
+        }
+        // check if there is a card in the given position
+        if (table.get(row).size() == 0 || table.get(row).get(column) == null) {
+            return null;
+        }
         return table.get(row).get(column);
     }
 
@@ -38,8 +46,15 @@ public class Table {
         table.get(row).add(card);
     }
 
-    public void removeCard(int row, int column) {
-        table.get(row).remove(column);
+    public CardInterface removeCard(int row, int column) {
+        if (row < 0 || row > 3 || column < 0 || (table.get(row).size() - 1) < column) {
+            return null;
+        }
+        // check if there is a card in the given position
+        if (table.get(row).size() == 0 || table.get(row).get(column) == null) {
+            return null;
+        }
+        return table.get(row).get(column);
     }
 
     public void removeCard(int row, CardInterface card) {
@@ -72,6 +87,27 @@ public class Table {
 
     public void clearRow(int row) {
         table.get(row).clear();
+    }
+
+    public void markUnUsed(){
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < table.get(i).size(); j++) {
+                table.get(i).get(j).setUsedAttack((short)(0));
+                table.get(i).get(j).unFreeze();
+            }
+        }
+    }
+
+    public int highestHealthOnRow(int row){
+        CardInterface highest = null;
+        int index = -1;
+        for (int i = 0; i < table.get(row).size(); i++) {
+            if (highest == null || highest.getHealth() < table.get(row).get(i).getHealth()){
+                highest = table.get(row).get(i);
+                index = i;
+            }
+        }
+        return index;
     }
 
     public boolean placeCard(CardInterface card, int playerNo) {

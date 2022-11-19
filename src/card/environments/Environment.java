@@ -4,6 +4,8 @@ import card.CardInterface;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.CardInput;
+import game.table.Table;
 
 import java.util.ArrayList;
 
@@ -92,8 +94,84 @@ public class Environment implements CardInterface {
         return false;
     }
 
-    public boolean isTank(){
+    public void setUsedAttack(short usedAttack) {
+    }
+
+
+    public boolean isTank() {
         return false;
+    }
+
+    public boolean useEffect(Table table, int currentPlayer, int row) {
+        ArrayList<CardInterface> tableRow = table.getRow(row);
+        switch (name) {
+            case "Firestorm":
+                for (int i = tableRow.size()- 1; i >= 0; i--) {
+                    CardInterface affCard = tableRow.get(i);
+                    if (affCard != null) {
+                        affCard.setHealth(affCard.getHealth() - 1);
+                        if(affCard.getHealth() <= 0) {
+                            table.removeCard(row, affCard);
+                        }
+                    }
+                }
+                return true;
+            case "Winterfell":
+                for (CardInterface affCard : tableRow) {
+                    if (affCard != null) {
+                        affCard.freeze();
+                    }
+                }
+                return true;
+            case "Heart Hound":
+                return shalom(table, currentPlayer, row);
+            case "default":
+                return false;
+        }
+        return false;
+    }
+
+    private boolean shalom(Table table, int currentPlayer, int row) {
+        // find the card from the affected row with the highest health
+        // steal the card
+        if (currentPlayer == 1) {
+            if (row == 1) {
+                if (table.getRow(2).size() >= 5)
+                    return false;
+                //fuck
+            }
+            if (row == 0)
+                if (table.getRow(3).size() >= 5)
+                    return false;
+            // fuck
+        } else {
+            if (row == 2) {
+                if (table.getRow(1).size() >= 5)
+                    return false;
+                //fuck
+            }
+            if (row == 3)
+                if (table.getRow(0).size() >= 5)
+                    return false;
+            // fuck
+        }
+        int column = table.highestHealthOnRow(row);
+        if(column == -1)
+            return false;
+        CardInterface card = table.removeCard(row,column);
+        if(row == 0){
+            table.addCard(3, card);
+        }
+        if(row == 1){
+            table.addCard(2, card);
+        }
+        if(row == 2){
+            table.addCard(1, card);
+        }
+        if(row == 3){
+            table.addCard(0, card);
+        }
+        return true;
     }
 
     public void spell(ArrayList<CardInterface> row) {

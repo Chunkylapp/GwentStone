@@ -87,8 +87,10 @@ public class Player {
     }
 
     public void drawCard(){
-        hand.add(deck.get(0));
-        deck.remove(0);
+        if(deck.size() > 0) {
+            hand.add(deck.get(0));
+            deck.remove(0);
+        }
     }
 
     /* might be useful later thanks github copilot :)

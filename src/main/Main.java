@@ -30,6 +30,7 @@ public final class Main {
     /**
      * DO NOT MODIFY MAIN METHOD
      * Call the checker
+     *
      * @param args from command line
      * @throws IOException in case of exceptions to reading / writing
      */
@@ -69,17 +70,18 @@ public final class Main {
         Input inputData = objectMapper.readValue(new File(CheckerConstants.TESTS_PATH + filePath1),
                 Input.class);
 
+
         ArrayNode output = objectMapper.createArrayNode();
 
-        //TODO add here the entry point to your implementation
+        /*//TODO add here the entry point to your implementation
         // "test02_place_card.json") || filePath1.equals("test01_game_start.json")
-        //                ||  filePath1.equals("test03_place_card_invalid.json") ||
-        if(filePath1.equals("test04_attack_card.json")) {
+        //                ||  filePath1.equals("test03_place_card_invalid.json") || filePath1.equals("test04_attack_card.json")
+        if (filePath1.equals("test05_attack_card_invalid.json")) {
             Game game = new Game(inputData);
             game.play(output);
-        }
-        /*Game game = new Game(inputData);
-        game.play(output);*/
+        }*/
+        Game game = new Game(inputData);
+        game.play(output);
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

@@ -3,6 +3,8 @@ import card.CardInterface;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.CardInput;
+import game.table.Table;
 
 import java.util.ArrayList;
 
@@ -14,7 +16,6 @@ public class NormalMinion implements CardInterface {
     private ArrayList<String> colors;
     private String name;
     private short isFrozen;
-
     private short usedAttack;
     public NormalMinion() {
     }
@@ -93,6 +94,10 @@ public class NormalMinion implements CardInterface {
         return isFrozen;
     }
 
+    public boolean useEffect(Table table, int currentPlayer, int row){
+        return false;
+    }
+
     public boolean isEnvironment() {
         return false;
     }
@@ -136,6 +141,10 @@ public class NormalMinion implements CardInterface {
 
     public boolean UsedAttack() {
         return usedAttack == 1;
+    }
+
+    public void setUsedAttack(short usedAttack){
+        this.usedAttack = usedAttack;
     }
 
     public boolean isTank() {

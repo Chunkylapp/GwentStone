@@ -1,6 +1,8 @@
 package card;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.CardInput;
+import game.table.Table;
 
 import java.util.ArrayList;
 
@@ -22,7 +24,9 @@ public interface CardInterface {
     public void unFreeze();
     public boolean isFrozen();
     public boolean UsedAttack();
+    public void setUsedAttack(short usedAttack);
     public boolean isEnvironment();
     public boolean isTank();
+    public boolean useEffect(Table table, int currentPlayer, int row);
     public ObjectNode getJson();
 }
