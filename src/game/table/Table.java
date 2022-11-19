@@ -93,7 +93,21 @@ public class Table {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < table.get(i).size(); j++) {
                 table.get(i).get(j).setUsedAttack((short)(0));
-                table.get(i).get(j).unFreeze();
+            }
+        }
+    }
+    public void unFreezePlayerCards(int player){
+        if(player == 1){
+            for (int i = 2; i < 4; i++) {
+                for (int j = 0; j < table.get(i).size(); j++) {
+                        table.get(i).get(j).unFreeze();
+                }
+            }
+        } else {
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < table.get(i).size(); j++) {
+                    table.get(i).get(j).unFreeze();
+                }
             }
         }
     }

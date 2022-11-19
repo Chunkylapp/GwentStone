@@ -149,7 +149,8 @@ public class NormalMinion implements CardInterface {
 
     public boolean isTank() {
         return switch (name) {
-            case "Goliath", "Warden" -> true;
+            case "Goliath" -> true;
+            case "Warden" -> true;
             default -> false;
         };
     }
