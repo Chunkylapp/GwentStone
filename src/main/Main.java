@@ -74,13 +74,13 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
 
         //TODO add here the entry point to your implementation
-        if (filePath1.equals("test07_attack_card_invalid.json")) {
+        /*if (filePath1.equals("test07_attack_card_invalid.json")) {
             Game game = new Game(inputData);
             game.play(output);
-        }
-        /*Game game = new Game(inputData);
+        }*/
+        Game game = new Game(inputData);
         game.play(output);
-*/
+
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
     }

@@ -110,18 +110,15 @@ public class Environment implements CardInterface {
                     CardInterface affCard = tableRow.get(i);
                     if (affCard != null) {
                         affCard.setHealth(affCard.getHealth() - 1);
-                        if(affCard.getHealth() <= 0) {
+                        if(affCard.getHealth() <= 0)
                             table.removeCard(row, affCard);
-                        }
                     }
                 }
                 return true;
             case "Winterfell":
-                for (CardInterface affCard : tableRow) {
-                    if (affCard != null) {
+                for (CardInterface affCard : tableRow)
+                    if (affCard != null)
                         affCard.freeze();
-                    }
-                }
                 return true;
             case "Heart Hound":
                 return shalom(table, currentPlayer, row);
@@ -135,21 +132,19 @@ public class Environment implements CardInterface {
         // find the card from the affected row with the highest health
         // steal the card
         if (currentPlayer == 1) {
-            if (row == 1) {
+            if (row == 1)
                 if (table.getRow(2).size() >= 5)
                     return false;
                 //fuck
-            }
             if (row == 0)
                 if (table.getRow(3).size() >= 5)
                     return false;
             // fuck
         } else {
-            if (row == 2) {
+            if (row == 2)
                 if (table.getRow(1).size() >= 5)
                     return false;
                 //fuck
-            }
             if (row == 3)
                 if (table.getRow(0).size() >= 5)
                     return false;
@@ -189,9 +184,8 @@ public class Environment implements CardInterface {
         json.put("mana", mana);
         json.put("description", description);
         ArrayNode strings = objectMapper.createArrayNode();
-        for (String color : colors) {
+        for (String color : colors)
             strings.add(color);
-        }
         json.put("colors", strings);
         json.put("name", name);
         return json;

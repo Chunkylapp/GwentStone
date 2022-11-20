@@ -54,7 +54,7 @@ public class Table {
         if (table.get(row).size() == 0 || table.get(row).get(column) == null) {
             return null;
         }
-        return table.get(row).get(column);
+        return table.get(row).remove(column);
     }
 
     public void removeCard(int row, CardInterface card) {
