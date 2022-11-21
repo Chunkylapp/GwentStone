@@ -150,4 +150,8 @@ public class Hero implements CardInterface {
                 '}';
     }
 
+    public boolean useAbility(CardInterface attacked, Table table, int currentPlayer, int row){
+        return false;
+    }
+
 }

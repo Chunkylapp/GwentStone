@@ -190,4 +190,7 @@ public class Environment implements CardInterface {
         json.put("name", name);
         return json;
     }
+    public boolean useAbility(CardInterface attacked, Table table, int currentPlayer, int row){
+        return false;
+    }
 }

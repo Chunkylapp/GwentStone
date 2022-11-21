@@ -95,6 +95,9 @@ public class Game {
                 case "getFrozenCardsOnTable" -> {
                     getFrozenCardsOnTable(output, objectMapper, command);
                 }
+                case "cardUsesAbility" -> {
+                    cardUsesAbility(output, objectMapper, command);
+                }
                 default -> {
                 }
             }
@@ -478,4 +481,64 @@ public class Game {
         }
     }
 
+    private void cardUsesAbility(ArrayNode output, ObjectMapper objectMapper, ActionsInput command) {
+        CardInterface cardAttacker = table.getCard(command.getCardAttacker().getX(), command.getCardAttacker().getY());
+        if (cardAttacker == null) {
+            ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+            cardUsesAttack.put("command", command.getCommand());
+
+            ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+            cardAttackerxy.put("x", command.getCardAttacker().getX());
+            cardAttackerxy.put("y", command.getCardAttacker().getY());
+            cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+            ObjectNode cardAttackedxy = objectMapper.createObjectNode();
+            cardAttackedxy.put("x", command.getCardAttacked().getX());
+            cardAttackedxy.put("y", command.getCardAttacked().getY());
+            cardUsesAttack.put("cardAttacked", cardAttackedxy);
+
+            cardUsesAttack.put("error", "Attacker card does not exist.");
+            output.add(cardUsesAttack);
+            return;
+        }
+        CardInterface cardAttacked = table.getCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+        if (cardAttacker.UsedAttack()) {
+            ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+            cardUsesAttack.put("command", command.getCommand());
+
+            ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+            cardAttackerxy.put("x", command.getCardAttacker().getX());
+            cardAttackerxy.put("y", command.getCardAttacker().getY());
+            cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+            ObjectNode cardAttackedxy = objectMapper.createObjectNode();
+            cardAttackedxy.put("x", command.getCardAttacked().getX());
+            cardAttackedxy.put("y", command.getCardAttacked().getY());
+            cardUsesAttack.put("cardAttacked", cardAttackedxy);
+
+            cardUsesAttack.put("error", "Attacker card has already attacked this turn.");
+            output.add(cardUsesAttack);
+            return;
+        }
+        if (cardAttacker.isFrozen()) {
+            ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+
+            ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+            cardAttackerxy.put("x", command.getCardAttacker().getX());
+            cardAttackerxy.put("y", command.getCardAttacker().getY());
+            cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+            ObjectNode cardAttackedxy = objectMapper.createObjectNode();
+            cardAttackedxy.put("x", command.getCardAttacked().getX());
+            cardAttackedxy.put("y", command.getCardAttacked().getY());
+            cardUsesAttack.put("cardAttacked", cardAttackedxy);
+
+            cardUsesAttack.put("command", command.getCommand());
+            cardUsesAttack.put("error", "Attacker card is frozen.");
+            output.add(cardUsesAttack);
+            return;
+        }
+
+        cardAttacker.useAbility(cardAttacked, table, currentPlayer, command.getCardAttacked().getX());
+    }
 }

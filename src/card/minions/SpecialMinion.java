@@ -156,4 +156,38 @@ public class SpecialMinion implements CardInterface {
         json.put("name", name);
         return json;
     }
+
+    public boolean useAbility(CardInterface attacked, Table table, int currentPlayer, int row){
+        usedAttack = 1;
+        switch(name){
+            case "The Ripper":
+                attacked.setAttackDamage(attacked.getAttackDamage() - 2);
+                if(attacked.getAttackDamage() < 0){
+                    attacked.setAttackDamage(0);
+                }
+                return true;
+            case "Miraj":
+                attacked.setHealth(health + attacked.getHealth());
+                health = attacked.getHealth() - health;
+                attacked.setHealth(attacked.getHealth() - health);
+                if(attacked.getHealth() <= 0){
+                    table.removeCard(row, attacked);
+                }
+                return true;
+            case "The Cursed One":
+                int aux = attacked.getHealth();
+                attacked.setHealth(attacked.getAttackDamage());
+                attacked.setAttackDamage(aux);
+                if(attacked.getHealth() <= 0){
+                    table.removeCard(row, attacked);
+                }
+                return true;
+            case "Disciple":
+                attacked.setHealth(attacked.getHealth() + 2);
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }

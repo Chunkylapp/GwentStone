@@ -172,4 +172,8 @@ public class NormalMinion implements CardInterface {
         return json;
     }
 
+    public boolean useAbility(CardInterface attacked, Table table, int currentPlayer, int row){
+        return false;
+    }
+
 }

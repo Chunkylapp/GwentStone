@@ -29,4 +29,6 @@ public interface CardInterface {
     public boolean isTank();
     public boolean useEffect(Table table, int currentPlayer, int row);
     public ObjectNode getJson();
+
+    public boolean useAbility(CardInterface attacked, Table table, int currentPlayer, int row);
 }
