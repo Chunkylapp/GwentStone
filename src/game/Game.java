@@ -98,9 +98,15 @@ public class Game {
                 case "cardUsesAbility" -> {
                     cardUsesAbility(output, objectMapper, command);
                 }
+                case "useAttackHero" -> {
+                    useAttackHero(output, objectMapper, command);
+                }
                 default -> {
                 }
             }
+        }
+        if (output.has("gameEnded")) {
+            return;
         }
     }
 
@@ -363,8 +369,10 @@ public class Game {
                     }
                     // we can attack the desired card
                     cardAttacker.attack(cardToAttack);
-                    if (cardToAttack.getHealth() <= 0)
+                    if (cardToAttack.getHealth() <= 0) {
                         table.removeCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
+
+                    }
                     cardAttacker.UsedAttack();
                     return;
                 }
@@ -483,6 +491,7 @@ public class Game {
 
     private void cardUsesAbility(ArrayNode output, ObjectMapper objectMapper, ActionsInput command) {
         CardInterface cardAttacker = table.getCard(command.getCardAttacker().getX(), command.getCardAttacker().getY());
+        CardInterface cardToAttack = table.getCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
         if (cardAttacker == null) {
             ObjectNode cardUsesAttack = objectMapper.createObjectNode();
             cardUsesAttack.put("command", command.getCommand());
@@ -501,7 +510,6 @@ public class Game {
             output.add(cardUsesAttack);
             return;
         }
-        CardInterface cardAttacked = table.getCard(command.getCardAttacked().getX(), command.getCardAttacked().getY());
         if (cardAttacker.UsedAttack()) {
             ObjectNode cardUsesAttack = objectMapper.createObjectNode();
             cardUsesAttack.put("command", command.getCommand());
@@ -538,7 +546,218 @@ public class Game {
             output.add(cardUsesAttack);
             return;
         }
+        if (cardAttacker.getName().equals("Disciple")) {
+            if ((currentPlayer == 1 && (command.getCardAttacked().getX() == 2 || command.getCardAttacked().getX() == 3)) ||
+                    (currentPlayer == 2 && (command.getCardAttacked().getX() == 0 || command.getCardAttacked().getX() == 1))) {
+                cardAttacker.useAbility(cardToAttack, table, currentPlayer, command.getCardAttacked().getX());
+                return;
+            } else {
+                ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+                cardUsesAttack.put("command", command.getCommand());
 
-        cardAttacker.useAbility(cardAttacked, table, currentPlayer, command.getCardAttacked().getX());
+                ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+                cardAttackerxy.put("x", command.getCardAttacker().getX());
+                cardAttackerxy.put("y", command.getCardAttacker().getY());
+                cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+                ObjectNode cardAttackedxy = objectMapper.createObjectNode();
+                cardAttackedxy.put("x", command.getCardAttacked().getX());
+                cardAttackedxy.put("y", command.getCardAttacked().getY());
+                cardUsesAttack.put("cardAttacked", cardAttackedxy);
+
+                cardUsesAttack.put("error", "Attacked card does not belong to the current player.");
+                output.add(cardUsesAttack);
+                return;
+            }
+        } else {
+            if ((currentPlayer == 1 && (command.getCardAttacked().getX() == 2 || command.getCardAttacked().getX() == 3)) ||
+                    (currentPlayer == 2 && (command.getCardAttacked().getX() == 0 || command.getCardAttacked().getX() == 1))) {
+                ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+
+                cardUsesAttack.put("command", command.getCommand());
+                ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+                cardAttackerxy.put("x", command.getCardAttacker().getX());
+                cardAttackerxy.put("y", command.getCardAttacker().getY());
+                cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+                ObjectNode cardAttackedxy = objectMapper.createObjectNode();
+                cardAttackedxy.put("x", command.getCardAttacked().getX());
+                cardAttackedxy.put("y", command.getCardAttacked().getY());
+                cardUsesAttack.put("cardAttacked", cardAttackedxy);
+
+                cardUsesAttack.put("error", "Attacked card does not belong to the enemy.");
+                output.add(cardUsesAttack);
+                return;
+            } else {
+                if (currentPlayer == 1) {
+                    // check if the card to attack is a tank
+                    if (cardToAttack.isTank()) {
+                        cardAttacker.useAbility(cardToAttack, table, currentPlayer, command.getCardAttacked().getX());
+                    } else {
+                        // lets try to find a tank
+                        CardInterface tank = null;
+                        for (int i = 0; i < table.getRow(1).size(); i++) {
+                            tank = table.getCard(1, i);
+                            if (tank.isTank()) {
+                                // error
+                                ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+                                cardUsesAttack.put("command", command.getCommand());
+
+                                ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+                                cardAttackerxy.put("x", command.getCardAttacker().getX());
+                                cardAttackerxy.put("y", command.getCardAttacker().getY());
+                                cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+                                ObjectNode cardAttackedxy = objectMapper.createObjectNode();
+                                cardAttackedxy.put("x", command.getCardAttacked().getX());
+                                cardAttackedxy.put("y", command.getCardAttacked().getY());
+                                cardUsesAttack.put("cardAttacked", cardAttackedxy);
+
+                                cardUsesAttack.put("error", "Attacked card is not of type 'Tank'.");
+                                output.add(cardUsesAttack);
+                                return;
+                            }
+                        }
+                        // we can attack the desired card
+                        cardAttacker.useAbility(cardToAttack, table, currentPlayer, command.getCardAttacked().getX());
+                        return;
+                    }
+                } else {
+                    // check if the card to attack is a tank
+                    if (cardToAttack.isTank()) {
+                        cardAttacker.useAbility(cardToAttack, table, currentPlayer, command.getCardAttacked().getX());
+                    } else {
+                        // lets try to find a tank
+                        CardInterface tank = null;
+                        for (int i = 0; i < table.getRow(2).size(); i++) {
+                            tank = table.getCard(2, i);
+                            if (tank.isTank()) {
+                                ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+                                cardUsesAttack.put("command", command.getCommand());
+
+                                ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+                                cardAttackerxy.put("x", command.getCardAttacker().getX());
+                                cardAttackerxy.put("y", command.getCardAttacker().getY());
+                                cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+                                ObjectNode cardAttackedxy = objectMapper.createObjectNode();
+                                cardAttackedxy.put("x", command.getCardAttacked().getX());
+                                cardAttackedxy.put("y", command.getCardAttacked().getY());
+                                cardUsesAttack.put("cardAttacked", cardAttackedxy);
+
+                                cardUsesAttack.put("error", "Attacked card is not of type 'Tank'.");
+                                output.add(cardUsesAttack);
+                                return;
+                            }
+                        }
+                        // we can attack the desired card
+                        cardAttacker.useAbility(cardToAttack, table, currentPlayer, command.getCardAttacked().getX());
+                        return;
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void useAttackHero(ArrayNode output, ObjectMapper objectMapper, ActionsInput command) {
+        CardInterface cardAttacker = table.getCard(command.getCardAttacker().getX(), command.getCardAttacker().getY());
+        if (cardAttacker == null) {
+            ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+            cardUsesAttack.put("command", command.getCommand());
+
+            ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+            cardAttackerxy.put("x", command.getCardAttacker().getX());
+            cardAttackerxy.put("y", command.getCardAttacker().getY());
+            cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+            cardUsesAttack.put("error", "Attacker card does not exist.");
+            output.add(cardUsesAttack);
+            return;
+        }
+        if (cardAttacker.UsedAttack()) {
+            ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+            cardUsesAttack.put("command", command.getCommand());
+
+            ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+            cardAttackerxy.put("x", command.getCardAttacker().getX());
+            cardAttackerxy.put("y", command.getCardAttacker().getY());
+            cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+            cardUsesAttack.put("error", "Attacker card has already attacked this turn.");
+            output.add(cardUsesAttack);
+            return;
+        }
+        if (cardAttacker.isFrozen()) {
+            ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+
+            ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+            cardAttackerxy.put("x", command.getCardAttacker().getX());
+            cardAttackerxy.put("y", command.getCardAttacker().getY());
+            cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+            cardUsesAttack.put("command", command.getCommand());
+            cardUsesAttack.put("error", "Attacker card is frozen.");
+            output.add(cardUsesAttack);
+            return;
+        }
+        if (currentPlayer == 1) {
+            // check if the card to attack is a tank
+            // lets try to find a tank
+            CardInterface tank = null;
+            for (int i = 0; i < table.getRow(1).size(); i++) {
+                tank = table.getCard(1, i);
+                if (tank.isTank()) {
+                    // error
+                    ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+                    cardUsesAttack.put("command", command.getCommand());
+
+                    ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+                    cardAttackerxy.put("x", command.getCardAttacker().getX());
+                    cardAttackerxy.put("y", command.getCardAttacker().getY());
+                    cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+                    cardUsesAttack.put("error", "Attacked card is not of type 'Tank'.");
+                    output.add(cardUsesAttack);
+                    return;
+                }
+            }
+            // we can attack the desired card
+            cardAttacker.attack(playerTwoHero);
+            if(playerTwoHero.getHealth() <= 0) {
+                ObjectNode gameOver = objectMapper.createObjectNode();
+                gameOver.put("gameEnded", "Player one killed the enemy hero.");
+                output.add(gameOver);
+            }
+            return;
+        } else {
+            // check if the card to attack is a tank
+            // lets try to find a tank
+            CardInterface tank = null;
+            for (int i = 0; i < table.getRow(2).size(); i++) {
+                tank = table.getCard(2, i);
+                if (tank.isTank()) {
+                    ObjectNode cardUsesAttack = objectMapper.createObjectNode();
+                    cardUsesAttack.put("command", command.getCommand());
+
+                    ObjectNode cardAttackerxy = objectMapper.createObjectNode();
+                    cardAttackerxy.put("x", command.getCardAttacker().getX());
+                    cardAttackerxy.put("y", command.getCardAttacker().getY());
+                    cardUsesAttack.put("cardAttacker", cardAttackerxy);
+
+                    cardUsesAttack.put("error", "Attacked card is not of type 'Tank'.");
+                    output.add(cardUsesAttack);
+                    return;
+                }
+            }
+            // we can attack the desired card
+            cardAttacker.attack(playerOneHero);
+            if(playerOneHero.getHealth() <= 0) {
+                ObjectNode gameOver = objectMapper.createObjectNode();
+                gameOver.put("gameEnded", "Player two killed the enemy hero.");
+                output.add(gameOver);
+            }
+            return;
+        }
     }
 }

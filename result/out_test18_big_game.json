@@ -135,6 +135,13 @@
   "x" : 0,
   "y" : 0
 }, {
+  "command" : "useAttackHero",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 0
+  },
+  "error" : "Attacked card is not of type 'Tank'."
+}, {
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
@@ -193,6 +200,8 @@
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
+  "gameEnded" : "Player one killed the enemy hero."
+}, {
   "command" : "getCardsOnTable",
   "output" : [ [ {
     "mana" : 2,
@@ -232,7 +241,7 @@
   }, {
     "mana" : 3,
     "attackDamage" : 1,
-    "health" : 7,
+    "health" : 2,
     "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
     "colors" : [ "Brown", "Black", "Grey" ],
     "name" : "Goliath"

@@ -78,6 +78,8 @@
   "x" : 0,
   "y" : 0
 }, {
+  "gameEnded" : "Player two killed the enemy hero."
+}, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
   "output" : 4

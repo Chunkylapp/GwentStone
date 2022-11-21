@@ -87,7 +87,8 @@ public class SpecialMinion implements CardInterface {
     }
 
     public void attack(CardInterface attackedCard) {
-        // to implement for each special minion
+        attackedCard.setHealth(attackedCard.getHealth() - attackDamage);
+        usedAttack = 1;
     }
 
     public void freeze() {

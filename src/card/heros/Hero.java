@@ -89,6 +89,7 @@ public class Hero implements CardInterface {
     }
 
     public void attack(CardInterface attackedCard) {
+
     }
 
     public void freeze() {
