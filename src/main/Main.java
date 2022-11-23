@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import checker.CheckerConstants;
+import fileio.GameInput;
 import fileio.Input;
 
 import java.io.File;
@@ -78,8 +79,13 @@ public final class Main {
             Game game = new Game(inputData);
             game.play(output);
         }*/
-        Game game = new Game(inputData);
-        game.play(output);
+        Game game = null;
+        for (GameInput rawGame : inputData.getGames()) {
+            game = new Game(rawGame, inputData);
+            game.play(output);
+        }
+        game.setPlayerOneWins(0);
+        game.setPlayerTwoWins(0);
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

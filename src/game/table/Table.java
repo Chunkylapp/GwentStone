@@ -1,32 +1,43 @@
 package game.table;
 
-import card.*;
+import card.CardInterface;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 
-public class Table {
+/**
+ * The table where the cards are placed.
+ */
+public final class Table {
 
-    private ArrayList<ArrayList<CardInterface>> table;
+    private final ArrayList<ArrayList<CardInterface>> table;
 
+    /**
+     * Constructor for the table.
+     */
     public Table() {
-        table = new ArrayList<ArrayList<CardInterface>>();
+        table = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            table.add(new ArrayList<CardInterface>());
+            table.add(new ArrayList<>());
         }
     }
 
-    public ArrayList<ArrayList<CardInterface>> getTable() {
-        return table;
-    }
-
-    public ArrayList<CardInterface> getRow(int row) {
+    /**
+     * Getter for the table.
+     *
+     * @return the table
+     */
+    public ArrayList<CardInterface> getRow(final int row) {
         return table.get(row);
     }
 
-    public CardInterface getCard(int row, int column) {
+    /**
+     * Getter for a card at row and column location.
+     *
+     * @return the card
+     */
+    public CardInterface getCard(final int row, final int column) {
         // check if row and column are valid
         if (row < 0 || row > 3 || column < 0 || (table.get(row).size() - 1) < column) {
             return null;
@@ -38,15 +49,23 @@ public class Table {
         return table.get(row).get(column);
     }
 
-    public void setCard(int row, int column, CardInterface card) {
-        table.get(row).set(column, card);
-    }
-
-    public void addCard(int row, CardInterface card) {
+    /**
+     * Adds a card to the table.
+     *
+     * @param row  the row where the card will be added
+     * @param card the card to be added
+     */
+    public void addCard(final int row, final CardInterface card) {
         table.get(row).add(card);
     }
 
-    public CardInterface removeCard(int row, int column) {
+    /**
+     * Removes a card from the table.
+     *
+     * @param row    the row where the card will be removed
+     * @param column the column where the card will be removed
+     */
+    public CardInterface removeCard(final int row, final int column) {
         if (row < 0 || row > 3 || column < 0 || (table.get(row).size() - 1) < column) {
             return null;
         }
@@ -57,50 +76,35 @@ public class Table {
         return table.get(row).remove(column);
     }
 
-    public void removeCard(int row, CardInterface card) {
+    /**
+     * Removes the card in the row.
+     * @param row the row where the card will be removed
+     * @param card the card to be removed
+     */
+    public void removeCard(final int row, final CardInterface card) {
         table.get(row).remove(card);
     }
 
-    public void removeRow(int row) {
-        table.remove(row);
-    }
-
-    public void addRow() {
-        table.add(new ArrayList<CardInterface>());
-    }
-
-    public void addRow(int row) {
-        table.add(row, new ArrayList<CardInterface>());
-    }
-
-    public void addRow(int row, ArrayList<CardInterface> cards) {
-        table.add(row, cards);
-    }
-
-    public void addRow(ArrayList<CardInterface> cards) {
-        table.add(cards);
-    }
-
-    public void clear() {
-        table.clear();
-    }
-
-    public void clearRow(int row) {
-        table.get(row).clear();
-    }
-
-    public void markUnUsed(){
+    /**
+     * Marks every card in the table as not attacked
+     */
+    public void markUnUsed() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < table.get(i).size(); j++) {
-                table.get(i).get(j).setUsedAttack((short)(0));
+                table.get(i).get(j).setUsedAttack((short) (0));
             }
         }
     }
-    public void unFreezePlayerCards(int player){
-        if(player == 1){
+
+    /**
+     * Unfreezes the cards that belong to the player.
+     * @param player the player
+     */
+    public void unFreezePlayerCards(final int player) {
+        if (player == 1) {
             for (int i = 2; i < 4; i++) {
                 for (int j = 0; j < table.get(i).size(); j++) {
-                        table.get(i).get(j).unFreeze();
+                    table.get(i).get(j).unFreeze();
                 }
             }
         } else {
@@ -112,11 +116,16 @@ public class Table {
         }
     }
 
-    public int highestHealthOnRow(int row){
+    /**
+     * Returns the card with the highest health on the given row.
+     * @param row the row where the card is
+     * @return the card with the highest health
+     */
+    public int highestHealthOnRow(final int row) {
         CardInterface highest = null;
         int index = -1;
         for (int i = 0; i < table.get(row).size(); i++) {
-            if (highest == null || highest.getHealth() < table.get(row).get(i).getHealth()){
+            if (highest == null || highest.getHealth() < table.get(row).get(i).getHealth()) {
                 highest = table.get(row).get(i);
                 index = i;
             }
@@ -124,41 +133,54 @@ public class Table {
         return index;
     }
 
-    public boolean placeCard(CardInterface card, int playerNo) {
+    /**
+     * Places a card on the table.
+     * @param card the card to be placed
+     * @param playerNo the player number
+     * @return true if the card was placed, false otherwise
+     */
+    public boolean placeCard(final CardInterface card, final int playerNo) {
         int row = -1;
         switch (card.getName()) {
             case "The Ripper":
             case "Miraj":
             case "Goliath":
             case "Warden":
-                if (playerNo == 1)
+                if (playerNo == 1) {
                     row = 2;
-                else
+                } else {
                     row = 1;
+                }
                 break;
             case "Sentinel":
             case "Berserker":
             case "The Cursed One":
             case "Disciple":
-                if (playerNo == 1)
+                if (playerNo == 1) {
                     row = 3;
-                else
+                } else {
                     row = 0;
+                }
                 break;
             default:
                 break;
         }
-        if (row != -1)
+        if (row != -1) {
             if (table.get(row).size() < 5) {
                 table.get(row).add(card);
                 return true;
             } else {
                 return false;
             }
-        else
+        } else {
             return false;
+        }
     }
 
+    /**
+     * Returns the json representation of the table.
+     * @return the json representation of the table
+     */
     public ArrayNode getJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode tableNode = objectMapper.createArrayNode();
@@ -171,5 +193,4 @@ public class Table {
         }
         return tableNode;
     }
-
 }

@@ -4,15 +4,27 @@ import card.environments.Environment;
 import card.heros.Hero;
 import card.minions.NormalMinion;
 import card.minions.SpecialMinion;
-import fileio.CardInput;
 import java.util.ArrayList;
 
-public class CardFactory {
+/**
+ * CardFactory class.
+ * This class is used to create CardInterface objects.
+ */
+public final class CardFactory {
 
+    /**
+     * Constructor for CardFactory class.
+     */
     public CardFactory() {
     }
 
-    public CardInterface getCard(CardInput rawCard) {
+
+    /**
+     * This method is used to create a CardInterface object.
+     * @param rawCard is the input from the JSON file
+     * @return a CardInterface object
+     */
+    public CardInterface getCard(final fileio.CardInput rawCard) {
         return switch (rawCard.getName()) {
             case "Sentinel", "Warden", "Goliath", "Berserker" ->
                     new NormalMinion(rawCard.getMana(), rawCard.getAttackDamage(),
